@@ -1,134 +1,87 @@
-## Summary
+## Overview
 
-This PR introduces a comprehensive smart contract system for aviation aircraft logbook maintenance entry. The contract provides a decentralized platform for documenting maintenance actions, recording discrepancies, certifying work completion, and maintaining immutable airworthiness records in compliance with aviation regulatory standards.
+This PR introduces a comprehensive smart contract system for managing aircraft maintenance logbook entries on the blockchain, ensuring regulatory compliance and airworthiness documentation.
 
-## Features Implemented
+## What Changed
 
-### Core Data Structures
+### Smart Contract Implementation
 
-- **Aircraft Map**: Tracks aircraft profiles with registration, hours, airworthiness status, and inspection schedules
-- **Maintenance Entries Map**: Records maintenance actions with work descriptions, hours logged, and certification status
-- **Discrepancies Map**: Documents aircraft defects with severity levels and resolution tracking
-- **Authorized Technicians Map**: Manages certified maintenance personnel credentials and ratings
-- **Inspection Records Map**: Maintains comprehensive inspection history and compliance findings
+Created `logbook-entry-coordinator.clar` with complete functionality for aviation maintenance tracking:
 
-### Administrative Functions
+**Core Features:**
+- Aircraft registration and profile management with airworthiness status
+- Maintenance entry creation and documentation with work descriptions
+- Discrepancy reporting and resolution workflow
+- Technician authorization and credential verification
+- Inspection recording with compliance tracking
+- Work certification by authorized maintenance personnel
 
-- `register-aircraft`: Add aircraft to the logbook tracking system
-- `authorize-technician`: Certify maintenance personnel with license and ratings
-- `update-aircraft-status`: Modify aircraft airworthiness status
-- `update-technician-status`: Manage technician authorization status
+**Data Structures:**
+- Aircraft profiles with registration, make/model, hours, airworthiness status
+- Maintenance entries with technician, work description, hours logged
+- Discrepancy records with severity levels and resolution tracking
+- Authorized technician credentials with license numbers and ratings
+- Inspection records with findings and compliance status
 
-### Maintenance Operations
-
-- `create-maintenance-entry`: Document maintenance work performed on aircraft
-- `record-discrepancy`: Log aircraft defects and discrepancies
-- `resolve-discrepancy`: Mark discrepancies as corrected and restore airworthiness
-- `certify-work`: Digitally sign off on completed maintenance tasks
-- `record-inspection`: Document inspection results and findings
-
-### Query Functions
-
-- `get-aircraft`: Retrieve comprehensive aircraft information
-- `get-maintenance-entry`: Access maintenance record details
-- `get-discrepancy`: View discrepancy information and resolution status
-- `get-technician-info`: Query technician credentials and ratings
-- `get-inspection-record`: Access inspection history
-- `check-airworthiness`: Verify current aircraft airworthiness status
-- Counter functions for aircraft, entries, and discrepancies
+**Key Functions:**
+- `register-aircraft` - Add aircraft to tracking system with initial data
+- `authorize-technician` - Grant maintenance entry permissions to certified personnel
+- `create-maintenance-entry` - Document maintenance actions performed
+- `record-discrepancy` - Log aircraft defects and discrepancies found
+- `resolve-discrepancy` - Mark discrepancies as corrected and restore airworthiness
+- `certify-work` - Digitally certify completion of maintenance tasks
+- `record-inspection` - Document regulatory inspections with findings
+- `update-aircraft-status` - Modify aircraft airworthiness status
+- `check-airworthiness` - Query current aircraft airworthiness
 
 ## Technical Details
 
-### Contract Architecture
+### Security & Access Control
+- Contract owner manages aircraft registration and technician authorization
+- Only active authorized technicians can create entries and record discrepancies
+- Technicians can only certify their own work entries
+- Aircraft must be airworthy for new maintenance entries
+- Discrepancies automatically set aircraft to non-airworthy until resolved
 
-The contract implements a comprehensive maintenance tracking system with:
-- Automatic airworthiness status management based on discrepancies
-- Inspection schedule tracking with due date calculations
-- Total flight hours accumulation with each maintenance entry
-- Authorization verification for all maintenance operations
+### Data Integrity
+- Immutable maintenance records with blockchain timestamps
+- Comprehensive audit trail for regulatory compliance
+- Automatic hour tracking on aircraft profiles
+- Inspection due date calculations
+- Resolved discrepancies tracked with resolver and timestamp
 
-### Airworthiness Management
+### Regulatory Compliance Support
+- Supports FAA Part 43 maintenance documentation requirements
+- EASA Part-M continuing airworthiness compliance
+- Complete maintenance action history
+- Discrepancy tracking from discovery through resolution
+- Work certification by authorized personnel
 
-- Aircraft automatically marked as not airworthy when discrepancies recorded
-- Airworthiness restored when discrepancies properly resolved
-- Inspection compliance directly affects airworthiness status
-- Manual override available for contract owner when needed
+## Testing
 
-### Access Control Model
+Contract passes `clarinet check` with valid Clarity syntax (warnings are standard for input validation patterns).
 
-- **Contract Owner**: Full administrative control over aircraft and technician authorization
-- **Authorized Technicians**: Can create entries, record discrepancies, certify work, conduct inspections
-- **Authorization Verification**: All maintenance operations require active technician credentials
-- **Work Certification**: Only the technician who created an entry can certify it
+## Use Cases
 
-## Security Considerations
-
-- Owner-only access for aircraft registration and status overrides
-- Technician authorization verification before all maintenance operations
-- Active status checks prevent operations by deauthorized personnel
-- Input validation on aircraft hours and other parameters
-- Duplicate prevention in technician authorization
-- Immutable maintenance history for audit trails
-
-## Regulatory Compliance Support
-
-This system supports compliance with:
-
-- **FAA 14 CFR Part 43**: Maintenance, Preventive Maintenance, Rebuilding, and Alteration
-- **EASA Part-M**: Continuing Airworthiness Requirements  
-- **ICAO Annex 6**: Operation of Aircraft maintenance standards
-- **Advisory Circular AC 43-9C**: Maintenance Records guidance
-
-The blockchain implementation provides:
-- Tamper-proof logbook records
-- Complete audit trails for regulatory inspections
-- Verifiable technician credentials and certifications
-- Transparent inspection and maintenance history
-
-## Aviation Safety Impact
-
-This contract enhances aviation safety by:
-
-- Ensuring systematic documentation of all maintenance actions
-- Providing transparent discrepancy tracking and resolution
-- Maintaining verifiable technician credentials and authorizations
-- Creating immutable records for accident investigations
-- Supporting data-driven maintenance planning and safety analysis
+1. **Maintenance Organizations**: Track all maintenance performed across fleet
+2. **Regulatory Audits**: Provide verifiable maintenance history to aviation authorities
+3. **Aircraft Operators**: Monitor airworthiness status and maintenance due dates
+4. **Maintenance Technicians**: Document work performed with proper certification
+5. **Safety Officers**: Track and resolve discrepancies systematically
 
 ## Future Enhancements
 
-Potential improvements for future iterations:
+- Multi-signature work approval for critical maintenance
+- Automated inspection scheduling based on hours/cycles
+- Integration with parts inventory tracking
+- Service bulletin compliance tracking
+- Maintenance program milestone monitoring
 
-- Integration with aircraft tracking systems (ADS-B, flight data)
-- Automated inspection due date reminders and notifications
-- Parts inventory tracking and lifecycle management
-- Multi-aircraft fleet management capabilities
-- Advanced analytics for predictive maintenance
-- Integration with OEM maintenance manuals and service bulletins
-- Mobile application for field technician data entry
+## Documentation
 
-## Contract Metrics
-
-- **Total Lines**: 346
-- **Public Functions**: 9
-- **Read-Only Functions**: 9
-- **Data Maps**: 5
-- **Data Variables**: 4
-- **Error Constants**: 7
-
-## Deployment Notes
-
-The contract is designed for deployment on the Stacks blockchain and has been validated with Clarinet. The contract owner (set at deployment) maintains administrative privileges for aircraft registration and technician authorization. All technicians must be explicitly authorized before they can perform maintenance operations or create logbook entries.
-
-## Operational Flow
-
-### Typical Maintenance Workflow:
-
-1. Aircraft registered by owner with initial hours and airworthiness status
-2. Technicians authorized with appropriate licenses and ratings
-3. Maintenance work performed and entry created by authorized technician
-4. If discrepancies found during work, recorded in system (aircraft marked not airworthy)
-5. Corrective action taken and discrepancy resolved (airworthiness restored)
-6. Work certified by performing technician with digital signature
-7. Periodic inspections recorded with compliance findings
-8. Complete audit trail maintained for regulatory compliance
+Comprehensive README included covering:
+- System architecture and features
+- Function reference and usage examples
+- Regulatory compliance framework
+- Security considerations
+- Development and deployment instructions
